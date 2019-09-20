@@ -4,4 +4,6 @@ simple json editor
 `npm install -g grunt`
 `npm install`
 
-`grunt build`
+`grunt dev` <-- local server
+
+`grunt build` <-- for prod
