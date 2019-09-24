@@ -4,7 +4,7 @@ $data = $_POST;
 
 if($data['exec'] == 'save_json'){
 
-    $json = $data['data'];
+    $json = $data['data'] ?? '';
     
     file_put_contents('assets/js/vue.components/util/items.json',json_encode($json));
 

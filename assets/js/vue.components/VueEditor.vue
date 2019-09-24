@@ -8,7 +8,7 @@
                         <div class="col-12 col-sm-6">
                             <input type="text" class="form-control" v-model="item.conta" placeholder="Numero da conta">
                             <input type="text" class="form-control" v-model="item.nome" placeholder="Nome da conta">
-                            <input type="text" class="form-control" v-model="item.robo" placeholder="Valor do robô">
+                            <input type="text" class="form-control" v-model="item.robo" placeholder="Número do robô">
                         </div>
                         <div class="col-12 col-sm-6">
                             <input type="date" class="form-control" v-model="item.termino" placeholder="Data de término">
@@ -81,15 +81,17 @@ import VueTable from "./VueTable.vue";
                 }).then(r => {
                     if(r.res == 'OK'){
 
-                        this.getItems()
-                        simpleAlert.show({
-                            message: `Item ${this.item.conta} salvo com sucesso.`,
-                            type: 'success'
-                        })
-
-                        this.item.forEach(el => {
-                            el = ''
-                        });   
+                        setTimeout(f => {
+                            this.getItems()
+                            simpleAlert.show({
+                                message: `Item ${this.item.conta} salvo com sucesso.`,
+                                type: 'success'
+                            })
+    
+                            this.item.forEach(el => {
+                                el = ''
+                            });   
+                        }, 1000)
                     }else{
                         simpleAlert.show({
                             message: `Houve um problema ao salvar ${this.item.conta}. Por favor, tente novamente.`,

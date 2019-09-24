@@ -5,7 +5,7 @@
             <thead>
                 <th>Contas</th>
                 <th>Nome</th>
-                <th>Robô</th>
+                <th>Nº do Robô</th>
                 <th>Data Término</th>
                 <th>Data Término Renovação</th>
                 <th>Observações</th>
@@ -14,7 +14,7 @@
             <tr v-for="(item, idx) in items" :key="idx">
                 <td>@{{item.conta}}</td>
                 <td>{{item.nome}}</td>
-                <td>${{item.robo}}</td>
+                <td>{{item.robo}}</td>
                 <td>{{item.termino}}</td>
                 <td>{{item.term_renovacao}}</td>
                 <td>{{item.observacao}}</td>
