@@ -8,6 +8,11 @@ class Session
     private $ssval;
     private $hash = 'sha256';
 
+    function __construct()
+    {
+        $this->initSession();
+    }
+
     function initSession()
     {
         session_start();
