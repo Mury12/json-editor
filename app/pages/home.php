@@ -7,3 +7,4 @@
         </div>
     </div>
 </section>
+<?php require_once('app/partials/pieces/modals.php'); ?>

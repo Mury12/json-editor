@@ -21,7 +21,7 @@ var vLn = new Vue({
                         response = {message: r.res, alertType: 'success'};
                         $('#login_modal').modal('hide');
                         vLo.isAuthenticated();
-                        location.href="json-manager";
+                        location.href="adm-golden/robos";
                     } else
                     if(r.err) response = {message: r.res, alertType: 'warn'};
                     
@@ -61,7 +61,7 @@ var vLo = new Vue({
                     message: r.res,
                     type: 'warn'
                 });
-                location.href="/";
+                location.href="/adm-golden";
                 vLo.isAuthenticated();
             });
             

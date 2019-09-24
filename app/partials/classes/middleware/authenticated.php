@@ -15,7 +15,7 @@ $ue = new UserController();
 if($access === 'not'){
     if($ue->isLoggedIn()){
         header('HTTP/1.0 401 Unauthorized.');
-        header('Location: /json-manager');
+        header('Location: /adm-golden/robos');
         return false;
     }
     return true;
@@ -24,7 +24,7 @@ if($access === 'not'){
 if($access === 'auth'){
     if(!$ue->isLoggedIn()){
         header('HTTP/1.0 401 Unauthorized.');
-        header('Location: /');
+        header('Location: /adm-golden');
         return false;
     }
     return true;

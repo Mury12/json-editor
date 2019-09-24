@@ -22,7 +22,6 @@ if(!$layout->isApi() && $permit):
         <footer class="bg-brand">
             <?php $layout->getFooter(); ?>
         </footer>
-        <?php require_once('app/partials/pieces/modals.php'); ?>
 
         
         <?php if($layout->isToTopButtonEnabled()): ?>

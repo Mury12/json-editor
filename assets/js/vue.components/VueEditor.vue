@@ -3,7 +3,7 @@
     <div class="row" id="table">
         <div class="col-12">
             <div class="row">
-                <form @submit="save($event)">
+                <form @submit="save($event)" ref="form1">
                     <div class="row">
                         <div class="col-12 col-sm-6">
                             <input type="text" class="form-control" v-model="item.conta" placeholder="Numero da conta">
@@ -11,8 +11,8 @@
                             <input type="text" class="form-control" v-model="item.robo" placeholder="Valor do robô">
                         </div>
                         <div class="col-12 col-sm-6">
-                            <input type="text" class="form-control" v-mask="['% ##/##/####']" v-model="item.termino" placeholder="Data de término">
-                            <input type="text" class="form-control" v-mask="['* ##/##/####']" v-model="item.term_renovacao" placeholder="Data de término renovação">
+                            <input type="date" class="form-control" v-model="item.termino" placeholder="Data de término">
+                            <input type="date" class="form-control" v-model="item.term_renovacao" placeholder="Data de término renovação">
                             <input type="text" class="form-control" v-model="item.observacao" placeholder="Observações"><br/>
                         </div>
                     </div>
@@ -71,7 +71,11 @@ import VueTable from "./VueTable.vue";
                 }
                 let data = this.items;
                 data.push(this.item);
-                $.post('api/json/save', {
+                this.do(data)
+            },
+            do: function(data)
+            {
+                 $.post('/api/json/save', {
                     exec: 'save_json',
                     data: data
                 }).then(r => {
@@ -92,15 +96,15 @@ import VueTable from "./VueTable.vue";
                             ttl: 5000
                         })
                     }
-                })
+                })  
             },
             validateForm: function() {
                 this.issues.splice(0, this.issues.length);
                 this.item.conta.length < 4 ? this.issues.push('Conta') : null
                 this.item.nome.length  < 3 ? this.issues.push('Nome')  : null
                 this.item.robo.length  < 2 ? this.issues.push('Robô')  : null
-                this.item.termino.length < 12 ? this.issues.push('Data de Termino') : null
-                this.item.term_renovacao.length < 12 ? this.issues.push('Data de Termino de Renovação') : null
+                this.item.termino.length < 10 ? this.issues.push('Data de Termino') : null
+                this.item.term_renovacao.length < 10 ? this.issues.push('Data de Termino de Renovação') : null
 
                 if(this.issues.length == 0) return true
 
@@ -109,8 +113,10 @@ import VueTable from "./VueTable.vue";
             },
             handleDelete: function(e)
             {
+                
                 this.items.splice(e, 1);
-                this.save()
+                console.log(e);
+                this.do(this.items)
             },
             handleEdit: function(e) 
             {
@@ -119,10 +125,10 @@ import VueTable from "./VueTable.vue";
             },
             getItems: function()
             {
-                $.post('api/json/save', {
+                $.post('/api/json/save', {
                     exec: 'get_json'
                 }).then(r => {
-                    this.items = r
+                    if(r) this.items = r
                 })
             }
         },
