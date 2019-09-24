@@ -3,44 +3,31 @@ module.exports = function (grunt) {
     grunt.initConfig({
         browserify: {
             dist: {
-                files: [{
-                    expand: true,        // Enable dynamic expansion.
-                    cwd: 'assets/js/',   // Source Path
-                    src: ['*.js'],       // Actual pattern(s) to match.
-                    dest: 'assets/pjs',  // Destination folder
-                    ext: '.min.js',          // Dest filepaths will have this extension.
-                },
-                {
-                    expand: true,       // Enable dynamic expansion.
-                    cwd: 'blog/wp-content/themes/myMiniFramework/js/',  // Source Path
-                    src: ['*.js'],      // Actual pattern(s) to match.
-                    dest: 'blog/wp-content/themes/myMiniFramework/pjs/',  // Destination folder
-                    ext: '.min.js',     // Dest filepaths will have this extension.
-                }],
+                files: [
+                    {
+                        expand: true,       // Enable dynamic expansion.
+                        cwd: 'assets/js/',  // Source Path
+                        src: ['*.js'],      // Actual pattern(s) to match.
+                        dest: 'assets/pjs/',  // Destination folder
+                        ext: '.min.js',     // Dest filepaths will have this extension.
+                    },
+                ],
                 options: {
+                    configure: b => b
+                    .transform('vueify')
+                    .transform(
+                      // Obrigatório para processar arquivos em node_modules
+                      { global: true },
+                      envify({ NODE_ENV: 'production' })
+                    )
+                    .bundle(),
                     transform: [
                         [
                             'babelify',
                             { presets: ["es2015"] }
                         ],
-                        [
-                            'vueify'
-                        ],
-                        [
-                            'envify'
-                        ]
                     ],
-                    browserifyOptions: {
-                        debug: false
-                    },
-                    configure: b => b
-                    .transform('vueify')
-                    .transform(
-                      // Required in order to process node_modules files
-                      { global: true },
-                      envify({ NODE_ENV: 'production' })
-                    )
-                    .bundle()
+
                 }
             },
             
@@ -53,13 +40,6 @@ module.exports = function (grunt) {
                         dest: 'assets/pjs/',  // Destination folder
                         ext: '.min.js',     // Dest filepaths will have this extension.
                     },
-                    {
-                        expand: true,       // Enable dynamic expansion.
-                        cwd: 'blog/wp-content/themes/myMiniFramework/js/',  // Source Path
-                        src: ['*.js'],      // Actual pattern(s) to match.
-                        dest: 'blog/wp-content/themes/myMiniFramework/pjs/',  // Destination folder
-                        ext: '.min.js',     // Dest filepaths will have this extension.
-                    }
                 ],
                 options: {
                     transform: [
