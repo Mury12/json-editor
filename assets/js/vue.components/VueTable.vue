@@ -12,7 +12,7 @@
                 <th>Ação</th>
             </thead>
             <tr v-for="(item, idx) in items" :key="idx">
-                <td>@{{item.conta}}</td>
+                <td>{{item.conta}}</td>
                 <td>{{item.nome}}</td>
                 <td>{{item.robo}}</td>
                 <td>{{item.termino}}</td>

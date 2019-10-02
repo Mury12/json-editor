@@ -1,1 +1,1 @@
-<h1>UNICK</h1>
+<h1>GOLDEN STRIPE</h1>

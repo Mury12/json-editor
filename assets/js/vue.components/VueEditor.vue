@@ -6,14 +6,26 @@
                 <form @submit="save($event)" ref="form1">
                     <div class="row">
                         <div class="col-12 col-sm-6">
-                            <input type="text" class="form-control" v-model="item.conta" placeholder="Numero da conta">
-                            <input type="text" class="form-control" v-model="item.nome" placeholder="Nome da conta">
-                            <input type="text" class="form-control" v-model="item.robo" placeholder="Número do robô">
+                            <label class="w-100">Número da Conta* <br/>
+                            <input type="text" class="form-control" v-model="item.conta" placeholder="Numero da conta" required>
+                            </label><br/>
+                            <label class="w-100">Nome da conta* <br/>
+                            <input type="text" class="form-control" v-model="item.nome" placeholder="Nome da conta" required>
+                            </label><br/>
+                            <label class="w-100">Número do Robô* <br/>
+                            <input type="text" class="form-control" v-model="item.robo" placeholder="Número do robô" required>
+                            </label>
                         </div>
                         <div class="col-12 col-sm-6">
-                            <input type="date" class="form-control" v-model="item.termino" placeholder="Data de término">
-                            <input type="date" class="form-control" v-model="item.term_renovacao" placeholder="Data de término renovação">
+                            <label class="w-100">Data de Término*<br/>
+                            <input type="date" class="form-control" v-model="item.termino" placeholder="Data de término" required>
+                            </label><br/>
+                            <label class="w-100">Data de Término de Renovação*<br/>
+                            <input type="date" class="form-control" v-model="item.term_renovacao" placeholder="Data de término renovação" required>
+                            </label><br/>
+                            <label class="w-100">Observações<br/>
                             <input type="text" class="form-control" v-model="item.observacao" placeholder="Observações"><br/>
+                            </label>
                         </div>
                     </div>
                     <button
