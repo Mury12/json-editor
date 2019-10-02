@@ -9,8 +9,8 @@ class Layout
     private $page = 'app/pages/hello-world.php';
     private $header = 'app/partials/header.php';
     private $footer = 'app/partials/footer.php';
-    private $title = 'Parsen Technologie';
-    private $head_title = "Parsen Tech.";
+    private $title = 'Golden Stripe';
+    private $head_title = "Golden Stripe";
     private $head_sub_text = "";
     private $head_image = "/assets/img/head-default.png";
     private $meta = Array();
