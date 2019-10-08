@@ -7,78 +7,115 @@ require_once('app/partials/classes/entities/UserEntity.php');
 
 class User
 {
-    private $request;
+    private $uname;
+    private $upass;
+    private $realname;
+    private $umail;
+    private $uid;
+    private $utoke;
+    public  $verified;
 
-    function __construct($request)
+    function __construct($uname = null, $upass = null)
     {
-        $this->request = $request;
+        $this->uname = $uname;
+        $this->upass = $upass;
+
+        $this->verify();
     }
 
-    function login()
+    private function verify()
     {
-        $ue = new UserEntity($this->request);
-        if($uid = $ue->bindUserPassword()){
-            $_SESSION[hash('sha256','auth')] = true;
-            $_SESSION[hash('sha256','uid')]  = $uid;
-            return $this->generateLoginToken($uid);
+        if($this->uname != null && $this->upass != null){
+            $this->uname = addslashes($this->uname);
+            $this->upass = addslashes($this->upass);
+
+            $this->verified = true;
+            return;
+        }
+        $this->verified = false;
+    }
+
+    function tokenVerification($_object)
+    {
+        if (is_object($_object) && ($_object instanceof LoginModel)) {
+            return $this->utoke === $_object->getToken();
         }
         return false;
     }
 
-    function isLoggedIn(){
-        if($_SESSION[hash('sha256', 'auth')]){
-            return true;
-        }   
-        return false;
-    }
-
-    function logOut(){
-        $_SESSION = [];
-        session_destroy();
-        \sendJsonResponse(['res'=>'Você saiu.']);
-    }
-
-    function generateLoginToken($uid)
+    function sendToken()
     {
-        $tok    = "tok_mmadvq_";
-        $_h     = microtime(true).$this->request['pwd'].$uid."tok@m..OklH44";
-        $hash   = hash("sha256", $_h);
-        $tok   .= $hash;
 
-        return $tok;
+        $msg = '<html>Olá, '.$this->uname.'.<br/>';
+        $msg.= '<br>Seu token de acesso diário é: '.$this->utoke.'<br/>';
+        $msg.= 'Atenciosamente, UNICK Administrativo.<br/></html>';
+
+        $data = array(
+            'msg' => $msg,
+            'target' => $this->umail,
+            'subject' => 'Seu token de acesso diário'
+        );
+
+        $w = new Email($data);
+
+        return $w->send();
     }
 
-    function getName()
+    /**
+     * getters/setters
+     */
+    function setToken($tok)
     {
-        return $this->name;
+        $this->utoke = addslashes($tok);
     }
 
-    function getEmail()
+    function setId($uid)
     {
-        return $this->email;
-    }
-
-    function getPwd()
-    {
-        return $this->pwd;
+        $this->uid = addslashes($uid);
     }
 
     function setName($name)
     {
-        $this->name = $name;
-        return $this;
-    }
-    
-    function setEmail($email)
-    {
-        $this->email = $email;
-        return $this;
+        $this->realname = $name;
     }
 
-    function setPwd($pwd)
+    public function setPass($upass)
     {
-        $this->pwd = hash('sha256', $pwd);
-        return $this;
+        $this->upass = $upass;
+    }
+
+    public function getUName()
+    {
+        return $this->uname;
+    }
+
+    function getName()
+    {
+        return $this->realname;
+    }
+
+    function getToken()
+    {
+        return $this->utoke;
+    }
+
+    public function getPass()
+    {
+        return $this->upass;
+    }
+
+    function setEmail($umail)
+    {
+        $this->umail = $umail;
+    }
+
+    function getEmail()
+    {
+        return $this->umail;
+    }
+    public function getId()
+    {
+        return $this->uid;
     }
 
 

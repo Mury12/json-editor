@@ -13,7 +13,7 @@
                     <div class="col-auto">
                         <form class="t-white text-left" @keyup.enter="login">
                             <label>Seu e-mail:<br />
-                                <input type="text" v-model="email" placeholder="Nome de usuário">
+                                <input type="text" v-model="username" placeholder="Nome de usuário">
                             </label>
 
                             <label>Sua senha:<br />

@@ -3,48 +3,89 @@
 namespace Controller\User;
 
 use Model\User;
+use Model\Session;
 require_once ('app/partials/classes/model/User.php');
+require_once ('app/partials/classes/model/Session.php');
 use Entity\UserEntity;
 require_once('app/partials/classes/entities/UserEntity.php');
 
 class UserController
 {
-    private $usr;
-    private $ue;
-    function __construct($request = null){
-        if($request != null){
-            $this->usr = new User($request);
-            $this->ue  = new UserEntity($request);
-        }
+    private $model;
+    private $entity;
+
+    function __construct($data = null)
+    {   
+        $this->model = new User($data['username'] ?? null, $data['pwd'] ?? null);
+        $this->entity = new UserEntity($this->model);
     }
 
-    function login()
+    function getName()
     {
-        global $_s;
-        if($uid = $this->ue->bindUserPassword()){
-                \sendJsonResponse(['res'=> "Você entrou!", 'err'=>false]);
-                $_s->newSessionValue('auth', true);
-                $_s->newSessionValue('uid', $uid);
+        return $this->model->getName();
+    }
+
+    function setToken($utok)
+    {
+        $this->model->setToken($utok);
+    }
+
+    function makeLogin()
+    {
+        $this->model = $this->entity->trust();
+
+        if($this->model == false) return false;
+
+        __REGISTER_TOKENS__ 
+        ? $this->model = $this->entity->registerToken()
+        : null;
+
+        if($this->model == false) return false;
+        if(!is_object($this->model) && $this->model == 2) return 2;
+
+        Session::set('logged_in', true);
+        Session::set('user_name', $this->model->getName());
+        Session::set('user_login', $this->model->getUName());
+        Session::set('user_email', $this->model->getEmail());
+        Session::set('_tok', __INTERNAL_TOKEN_HASH__);
+        Session::set('_user', $this->model);
+
+        __LOGIN_LOGGER__
+        ? $this->entity->loginLogger()
+        : null;
+
+        return true;
+    }
+
+    function makeLogout()
+    {
+        Session::set('logged_in', false);
+        Session::abort();
+        Session::start();
+        return true;
+    }
+
+    function tokenVerification($token)
+    {
+        $this->model->setToken($token);
+
+        if($this->model->tokenVerification(Session::get('_user'))){
+            $this->model = Session::get('_user');
+            Session::set('logged_in', true);
+            Session::set('user_name', $this->model->getName());
+            Session::set('user_login', $this->model->getUName());
+            Session::set('user_email', $this->model->getEmail());
+            
+
             return true;
-        }else{
-            \sendJsonResponse(['res'=>'Seu e-mail ou senha estão incorretos!','err'=>true]);
         }
+
         return false;
     }
 
-    function isLoggedIn()
+    function getSessionToken()
     {
-        if(\array_key_exists(hash('sha256', 'auth'), $_SESSION) && $_SESSION[hash('sha256', 'auth')]){
-            return true;
-        }   
-        return false;
-    }
-
-    function logOut()
-    {
-        $_SESSION = [];
-        session_destroy();
-        \sendJsonResponse(['res'=>'Você saiu.']);
+        return Session::get('_user')->getToken();
     }
 
 

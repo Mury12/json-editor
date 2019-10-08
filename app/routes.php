@@ -18,7 +18,7 @@
                 ->permission('not')
                 ->addJs("home")
         ,
-        'adm-golden/robos' => 
+        __ROOT_ROUTE_PREFIX__.'robos' => 
                 $l = new Layout,
                 $l->setPage('json-admin')
                 ->appendTitle('Administração', "|")
@@ -27,28 +27,7 @@
                 ->addJs("home")
                 ->permission('auth')
         ,
-        '8c6976e5b5410415bde908bd4dee15d'=>
-                $l = new Layout,
-                $l->setPage('api/get-json-os')
-                ->permission('any')
-                ->isApi(true)
-        ,       
-        'api/usr/login' =>
-                $l = new Layout,
-                $l->setPage('api/usr/login')
-                ->isApi(true)
-        ,
-        'api/json/save' => 
-                $l = new Layout,
-                $l->setPage('api/json-save')
-                ->permission('auth')
-                ->isApi(true)
-        ,
-        'api/getUniqId' =>
-                $l = new Layout,
-                $l->setPage('api/uniqid_gen')
-                ->isApi(true)
-        ,
+        
         'error/404' =>
                 $l = new Layout,
                 $l->setPage('errors/404')

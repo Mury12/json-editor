@@ -6,14 +6,14 @@
  * (como uma página de cadastro ou login, por exemplo) e, caso seja como Layout::permission('auth'),
  * o usuário não autenticado não poderá acessar a página (como um painel de usuário).
  */
+use Model\Session;
+require_once 'app/partials/classes/model/Session.php';
 
-use Controller\User\UserController;
-require_once('app/partials/classes/controller/UserController.php');
 $access = $layout->getAccessLevel();
-$ue = new UserController();
 
 if($access === 'not'){
-    if($ue->isLoggedIn()){
+    if(Session::get('logged_in')){
+
         header('HTTP/1.0 401 Unauthorized.');
         header('Location: /adm-golden/robos');
         return false;
@@ -22,7 +22,7 @@ if($access === 'not'){
 }else
 
 if($access === 'auth'){
-    if(!$ue->isLoggedIn()){
+    if(!Session::get('logged_in')){
         header('HTTP/1.0 401 Unauthorized.');
         header('Location: /adm-golden');
         return false;

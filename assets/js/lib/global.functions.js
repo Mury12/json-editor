@@ -1,12 +1,24 @@
+global.config = {
+  site: {
+      root: '/adm-golden',
+      robot_panel: '/adm-golden/robots'
+  },
+  api: {
+      url: '/ws/v2/',
+      user: {
+          login: '/ws/v2/usr/login',
+          signup: '/ws/v2/usr/signup'
+      }
+  }
+}
+
 global.auth = false;
 global.onRequest = false;
 global.isAuthenticated = function()
 {
-    $.post('api/usr/login', {
-        execution: 'is_logged_in'
-    }, function(r){
+    perform.post(config.user.login,'is_logged_in').then(function(r){
         regAuth(r)
-    }, 'json')
+    });
 }
 
 function regAuth(r)
@@ -56,4 +68,34 @@ global.resizeImage = function(img, maxWidth, maxHeight)
     };
     img.onerror = reject;
   })
+}
+global.revstr = function(string) {
+  return string.split("").reverse().join("");
+}
+global.req_encode = function(json){
+  return revstr(
+    btoa(
+      revstr(
+        btoa(
+          revstr(
+            JSON.stringify(json)
+          )
+        )
+      )
+    )
+  );
+}
+global.perform = {
+    post: function(url, service, request) {
+    let req = {
+      _: service,
+      req: request
+    }
+
+    req = req_encode(req);
+
+    return $.post(url, {['_']:req} , null, 'json').then(r => {
+      return r;
+    })
+  }
 }
