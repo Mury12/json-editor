@@ -87,10 +87,8 @@ import VueTable from "./VueTable.vue";
             },
             do: function(data)
             {
-                 $.post('/api/json/save', {
-                    exec: 'save_json',
-                    data: data
-                }).then(r => {
+                    perform.post(config.api.robot.get,'save_json', data)
+                    .then(r => {
                     if(r.res == 'OK'){
 
                         setTimeout(f => {
@@ -139,9 +137,8 @@ import VueTable from "./VueTable.vue";
             },
             getItems: function()
             {
-                $.post('/api/json/save', {
-                    exec: 'get_json'
-                }).then(r => {
+                perform.post(config.api.robot.get,'get_json')
+                .then(r => {
                     if(r) this.items = r
                 })
             }

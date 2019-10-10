@@ -60,3 +60,35 @@ function swapChars($string)
 function decode_request($request){
     return json_decode(strrev(base64_decode(strrev(base64_decode(strrev($request))))), true);
 }
+function makeArrayFromQuery($q, $cls = null, $map = false)
+{
+	$r = array();
+    while ($ln = $q->fetch(PDO::FETCH_ASSOC)) {
+		if ($cls == null && !$map) {
+            $r[] = $ln;
+        } elseif ($cls != null && $map) {
+            $r[] = new $cls(array_map('utf8_encode',$ln));
+        } else {
+            $r[] = new $cls($ln);
+        }
+    }
+    return $r;
+}
+function url_exists($url)
+{
+    $ch = curl_init($url);    
+    curl_setopt($ch, CURLOPT_NOBODY, true);
+    curl_exec($ch);
+    $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    if($code == 200){
+       $status = true;
+    }else{
+      $status = false;
+    }
+    curl_close($ch);
+   return $status;
+}
+function get_class_file($folder, $filename)
+{
+    return require_once('app/partials/classes/'.$folder.'/'.$filename.'.php');
+}

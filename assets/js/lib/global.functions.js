@@ -1,22 +1,22 @@
 global.config = {
   site: 
   {
-      root: '/adm-golden/',
-      robot_panel: '/adm-golden/robots/'
+      root: '/adm-golden',
+      robot_panel: '/adm-golden/robots'
   },
   api: 
   {
       url: '/ws/v2/',
       user: 
       {
-          login: '/ws/v2/usr/login/',
-          signup: '/ws/v2/usr/signup/'
+          login: '/ws/v2/usr/login',
+          signup: '/ws/v2/usr/signup'
       },
       robot: 
       {
-        auth: '/ws/v2/r/auth/',
-        put : '/ws/v2/r/put/',
-        get : '/ws/v2/r/get/'
+        auth: '/ws/v2/r/auth',
+        put : '/ws/v2/r/put',
+        get : '/ws/v2/r/get'
       }
   }
 }
