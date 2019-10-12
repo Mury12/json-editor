@@ -92,3 +92,20 @@ function get_class_file($folder, $filename)
 {
     return require_once('app/partials/classes/'.$folder.'/'.$filename.'.php');
 }
+
+function getUniquid($len = 6, $alt = '')
+{
+    $d = time();
+    $pre = 'unique_id_mm@@_'.$alt;
+    $pre = hash('sha256', $pre.$d);
+    $uid ='';
+
+        if($len > 128){
+            return;
+        }
+
+    for($i = 0; $i<$len; $i++){
+        $uid .= substr($pre, rand(0, $len), 1);
+    }
+    return  ['res'=>$uid, 'length'=>strlen($uid), 'hash'=>$pre];
+}

@@ -14,4 +14,8 @@ class Platform
         }
     }
 
+    function set_new_variable($var, $val)
+    {
+        $this->{$var} = $val;
+    }
 }

@@ -1,29 +1,40 @@
 <?php
 
-use Entity\Robot\OrderEntity;
-get_class_file('entities', 'OrderEntity');
+use Controller\Robot\OrderController;
+get_class_file('controller', 'OrderController');
 
 $data = decode_request($_POST['_'] ?? null);
 
 if($data['_'] == 'save_json'){
 
-    $oe = new OrderEntity();
-    print_r($oe->order);
 
-    $json = $data['req'] ?? '';
-    
-    file_put_contents('assets/js/vue.components/util/items.json',json_encode($json));
+    $oc = new OrderController($data['req']);
 
-    sendJsonResponse(['res'=>'OK', 'err'=>false, 'written' => $json]);
+    if($oc->saveOrder()){
+        sendJsonResponse(['res'=>'OK', 'err'=>false]);   
+    }else{
+        sendJsonResponse(['res'=>'NOK', 'err'=>true]);
+    }
 
 }else
-// if($data['_'] == 'get_json'){
-    $oe = new OrderEntity();
-    $oe->getOrders();
-    // print_r($oe->orders[1]->password);
-    sendJsonResponse($oe->orders);
-    // $content = file_get_contents('assets/js/vue.components/util/items.json');
+if($data['_'] == 'get_json'){
+    
+    $oc = new OrderController();
+    $r = $oc->getOrders();
 
-    // sendJsonResponse(json_decode($content));
+    sendJsonResponse($r ? $r : [Array('')]);
 
-// }
+}else
+if($data['_'] == 'del_item'){
+
+    $oc = new OrderController();
+    if ($oc->delItem($data['req']['item_id'])){
+        sendJsonResponse(['res' => 'Item excluído com sucesso.', 'err' => false]);    
+        return;
+    }
+    sendJsonResponse(['res' => 'Houve um problema ao excluir este item.', 'err' => true]);    
+    return;
+}else
+if($data['_'] == 'change_json'){
+    sendJsonResponse(['res' => 'OK', 'err' => false]);        
+}
