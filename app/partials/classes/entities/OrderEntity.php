@@ -38,11 +38,11 @@ class OrderEntity
 
     function saveOrder()
     {
-        $key = \getUniquid(6)['res'];
-        $pass = \getUniquid(64)['res'];
-        $token = \getUniquid(64, $this->o->owner->owner_name)['res'];
+        $this->o->key = \getUniquid(6)['res'];
+        $this->o->pass = \getUniquid(8)['res'];
+        $this->o->token = \getUniquid(32, $this->o->owner->owner_name)['res'];
 
-        $expiration_or_renew = $this->o->renew_expires_at ?? $this->o->expires_at;
+        $expiration_or_renew = strlen($this->o->renew_expires_at ?? 0) < 10 ? $this->o->expires_at : $this->o->renew_expires_at;
         $_renweal = intval($this->o->renew_expires_at != null ? true : false);
 
         $query = "call sp_create_order(?,?,?,?,?,?,?,?,?,?)";
@@ -53,17 +53,20 @@ class OrderEntity
         $q->bindParam(3, $this->o->platform->platform_code);
         $q->bindParam(4, $this->o->account_freed);
         $q->bindParam(5, $expiration_or_renew);
-        $q->bindParam(6, $token);
-        $q->bindParam(7, $key);
-        $q->bindParam(8, $pass);
+        $q->bindParam(6, $this->o->token);
+        $q->bindParam(7, $this->o->key);
+        $q->bindParam(8, $this->o->pass);
         $q->bindParam(9, $this->o->comment);
         $q->bindParam(10, $_renweal);
 
-        print_r($this->o);
+        // print_r($this->o);
 
         try {
-            return $q->execute();
-        } catch (Exception $th) {
+            if($q->execute()){
+                return true;
+            }
+            file_put_contents('/log.txt', $q->errorInfo());
+        } catch (PDOException $th) {
             throw $th;
         }
         return false;

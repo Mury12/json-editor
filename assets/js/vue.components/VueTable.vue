@@ -19,8 +19,9 @@
                 <td>{{item.renew_expires_at || '--'}}</td>
                 <td>{{item.observacao}}</td>
                 <td>
-                    <button class="btn btn-success"
-                        @click="$emit('edit', idx)"
+                    <button class="btn btn-success" 
+                        :class="{'disabled': editing == idx}"
+                        @click="editing != idx ? $emit('edit', idx) : ''"
                     >
                         <i class="far fa-edit  " style="cursor: pointer"></i>
                     </button>
@@ -46,7 +47,7 @@
             }
         },
         props: [
-            'items'
+            'items', 'editing'
         ]
     }
 </script>

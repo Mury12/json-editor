@@ -36,5 +36,6 @@ if($data['_'] == 'del_item'){
     return;
 }else
 if($data['_'] == 'change_json'){
+    $oc = new OrderController($data['req']);
     sendJsonResponse(['res' => 'OK', 'err' => false]);        
 }

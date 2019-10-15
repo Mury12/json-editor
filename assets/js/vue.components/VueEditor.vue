@@ -35,12 +35,19 @@
                         class="btn btn-success"
                         type="submit" 
                     >Salvar</button>
+                    <button 
+                        v-if="item.editing"
+                        @click="editCancel"
+                        class="btn btn-info"
+                        type="button"
+                    >Cancelar edição</button>
                 </form>
             </div>
             <div class="row" >
                 <vue-table :items="items"
                     @delete ="handleDelete($event)"
                     @edit   ="handleEdit($event)"
+                    :editing='item.curIdx'
                 ></vue-table>
             </div>
         </div>
@@ -56,6 +63,7 @@ import VueTable from "./VueTable.vue";
             return {
                 auth: false,
                 issues: [],
+                cleanItem: {},
                 item: {
                     account_freed: '',
                     owner_name: '',
@@ -64,7 +72,8 @@ import VueTable from "./VueTable.vue";
                     renew_expires_at: '',
                     platform_code: '',
                     comment: '',
-                    editing: false
+                    editing: false,
+                    curIdx: -1
                 },
                 items: []
             }
@@ -135,14 +144,22 @@ import VueTable from "./VueTable.vue";
             },
             handleEdit: function(e) 
             {
-                if(this.item.editing){
-                    this.items.push(this.item);
-                }
                 this.item = this.items[e];
                 this.item.owner_name = this.item.owner.owner_name || '';
                 this.item.platform_code = this.item.platform.platform_code || '';
                 this.item.editing = true;
-                this.items.splice(e, 1);
+                this.item.curIdx = e;
+            },
+            editCancel: function()
+            {
+                let right = this.items.splice(this.item.curIdx, this.items.length-1);
+                
+                this.items.push(this.item);
+                right.forEach(el => {
+                    this.items.push(el);
+                })
+                this.item.editing = false;
+                this.item.curIdx = -1;
             },
             delItem: function(e)
             {
@@ -171,6 +188,7 @@ import VueTable from "./VueTable.vue";
         },
         created: function(){
             this.getItems();
+            this.cleanItem = this.items;
         }
 
     }
