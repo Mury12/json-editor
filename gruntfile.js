@@ -181,7 +181,7 @@ module.exports = function (grunt) {
                     'assets/fonts/*',
                     'assets/img/**',
                     'assets/js/*',
-                    'app/**/*.php'
+                    'app/**/pages/*.php'
                 ]
             },
             options: {

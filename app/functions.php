@@ -56,3 +56,56 @@ function swapChars($string)
 {
     return preg_replace(array("/(á|à|ã|â|ä)/","/(Á|À|Ã|Â|Ä)/","/(é|è|ê|ë)/","/(É|È|Ê|Ë)/","/(í|ì|î|ï)/","/(Í|Ì|Î|Ï)/","/(ó|ò|õ|ô|ö)/","/(Ó|Ò|Õ|Ô|Ö)/","/(ú|ù|û|ü)/","/(Ú|Ù|Û|Ü)/","/(ñ)/","/(Ñ)/"),explode(" ","a A e E i I o O u U n N"),$string);
 }	
+
+function decode_request($request){
+    return json_decode(strrev(base64_decode(strrev(base64_decode(strrev($request))))), true);
+}
+function makeArrayFromQuery($q, $cls = null, $map = false)
+{
+	$r = array();
+    while ($ln = $q->fetch(PDO::FETCH_ASSOC)) {
+		if ($cls == null && !$map) {
+            $r[] = $ln;
+        } elseif ($cls != null && $map) {
+            $r[] = new $cls(array_map('utf8_encode',$ln));
+        } else {
+            $r[] = new $cls($ln);
+        }
+    }
+    return $r;
+}
+function url_exists($url)
+{
+    $ch = curl_init($url);    
+    curl_setopt($ch, CURLOPT_NOBODY, true);
+    curl_exec($ch);
+    $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    if($code == 200){
+       $status = true;
+    }else{
+      $status = false;
+    }
+    curl_close($ch);
+   return $status;
+}
+function get_class_file($folder, $filename)
+{
+    return require_once('app/partials/classes/'.$folder.'/'.$filename.'.php');
+}
+
+function getUniquid($len = 6, $alt = '')
+{
+    $d = time();
+    $pre = 'unique_id_mm@@_'.$alt;
+    $pre = hash('sha256', $pre.$d);
+    $uid ='';
+
+        if($len > 128){
+            return;
+        }
+
+    for($i = 0; $i<$len; $i++){
+        $uid .= substr($pre, rand(0, $len), 1);
+    }
+    return  ['res'=>$uid, 'length'=>strlen($uid), 'hash'=>$pre];
+}

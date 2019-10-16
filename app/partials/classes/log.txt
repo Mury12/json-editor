@@ -1,0 +1,10 @@
+42000 1318 Incorrect number of arguments for PROCEDURE golden_robot.sp_create_order; expected 11, got 10
+23000 1062 Duplicate entry '971212ebc93e119739851c11ed851e1a-bb544f-94b59559' for key 'token'
+23000 1062 Duplicate entry '971212ebc93e119739851c11ed851e1a-bb544f-94b59559' for key 'token'
+23000 1062 Duplicate entry '971212ebc93e119739851c11ed851e1a-bb544f-94b59559' for key 'token'
+23000 1062 Duplicate entry '971212ebc93e119739851c11ed851e1a-bb544f-94b59559' for key 'token'
+45900 1644 Error binding tokens
+23000 1062 Duplicate entry '971212ebc93e119739851c11ed851e1a-bb544f-94b59559' for key 'token'
+23000 1062 Duplicate entry '971212ebc93e119739851c11ed851e1a-bb544f-94b59559' for key 'token'
+42S22 1054 Unknown column '_renew' in 'field list'
+42S22 1054 Unknown column 'expires_at' in 'field list'

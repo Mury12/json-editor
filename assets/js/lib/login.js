@@ -1,7 +1,6 @@
 var response;
 var login = {
-    execution: '',
-    email: '',
+    username: '',
     pwd: '',
 }
 var vLn = new Vue({
@@ -10,13 +9,12 @@ var vLn = new Vue({
 
     methods: {
         login: function(){
-            if(this.email.length <= 0) return simpleAlert.show({message: 'Precisa preencher seu e-mail!'}); else
+            if(this.username.length <= 0) return simpleAlert.show({message: 'Precisa preencher seu e-mail!'}); else
             if(this.pwd.length < 4) return simpleAlert.show({message: 'Você precisa preencher sua senha!'});
 
             else
             {
-                this.execution = 'login_execute';
-                $.post('/api/usr/login', login, null, 'json').then(function(r){
+                perform.post(config.api.user.login, 'login', login).then(function(r){
                     if(!r.err) {
                         response = {message: r.res, alertType: 'success'};
                         $('#login_modal').modal('hide');
@@ -47,16 +45,14 @@ var vLn = new Vue({
 
 var logout = {
     execution: '',
-    auth: auth
+    auth: auth,
 }
 var vLo = new Vue({
     el: '#login_btns',
     data: logout,
     methods: {
         logOut: function(){
-            $.post('/api/usr/login', {
-                execution: 'logout_execute' 
-            }, null, 'json').then(function(r){
+            perform.post(config.api.user.login, 'logout').then(function(r){
                 simpleAlert.show({
                     message: r.res,
                     type: 'warn'
@@ -73,11 +69,9 @@ var vLo = new Vue({
         },
         
         isAuthenticated: function(){
-            $.post('/api/usr/login', {
-                execution: 'is_logged_in'
-            }, function(r){
+            perform.post(config.api.user.login, 'is_logged_in').then(function(r){
                 vLo.regAuth(r)
-            }, 'json')
+            });
         },
 
     },

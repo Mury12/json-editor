@@ -1,19 +1,47 @@
 <?php
 
-$data = $_POST;
+use Controller\Robot\OrderController;
+get_class_file('controller', 'OrderController');
 
-if($data['exec'] == 'save_json'){
+$data = decode_request($_POST['_'] ?? null);
 
-    $json = $data['data'] ?? '';
-    
-    file_put_contents('assets/js/vue.components/util/items.json',json_encode($json));
+if($data['_'] == 'save_json'){
 
-    sendJsonResponse(['res'=>'OK', 'err'=>false, 'written' => $json]);
+
+    $oc = new OrderController($data['req']);
+
+    if($oc->saveOrder()){
+        sendJsonResponse(['res'=>'OK', 'err'=>false]);   
+    }else{
+        sendJsonResponse(['res'=>'NOK', 'err'=>true]);
+    }
 
 }else
-if($data['exec'] == 'get_json'){
-    $content = file_get_contents('assets/js/vue.components/util/items.json');
+if($data['_'] == 'get_json'){
+    
+    $oc = new OrderController();
+    $r = $oc->getOrders();
 
-    sendJsonResponse(json_decode($content));
+    sendJsonResponse($r ? $r : [Array('')]);
 
+}else
+if($data['_'] == 'del_item'){
+
+    $oc = new OrderController();
+    if ($oc->delItem($data['req']['item_id'])){
+        sendJsonResponse(['res' => 'Item excluído com sucesso.', 'err' => false]);    
+        return;
+    }
+    sendJsonResponse(['res' => 'Houve um problema ao excluir este item.', 'err' => true]);    
+    return;
+}else
+if($data['_'] == 'change_json'){
+    
+    $oc = new OrderController($data['req']);
+
+    if($oc->saveOrder()){
+        sendJsonResponse(['res'=>'OK', 'err'=>false]);   
+    }else{
+        sendJsonResponse(['res'=>'NOK', 'err'=>true]);
+    }      
 }
