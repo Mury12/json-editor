@@ -23,7 +23,7 @@
                             <label class="w-100">Data de Término*<br/>
                             <input type="date" class="form-control" v-model="item.expires_at" placeholder="Data de término" required>
                             </label><br/>
-                            <label class="w-100">Data de Término de Renovação*<br/>
+                            <label class="w-100" v-if="item.editing">Data de Término de Renovação*<br/>
                             <input type="date" class="form-control" v-model="item.renew_expires_at" placeholder="Data de término renovação">
                             </label><br/>
                             <label class="w-100">Observações<br/>
@@ -63,7 +63,6 @@ import VueTable from "./VueTable.vue";
             return {
                 auth: false,
                 issues: [],
-                cleanItem: {},
                 item: {
                     account_freed: '',
                     owner_name: '',
@@ -110,11 +109,8 @@ import VueTable from "./VueTable.vue";
                                 message: `Item ${this.item.account_freed} salvo com sucesso.`,
                                 type: 'success'
                             })
-    
-
-                            this.getItems()
-                            this.item.editing = false;
-                            this.items.push(this.item);
+                            this.editCancel();    
+                            this.getItems();
                         }, 1000)
                     }else{
                         simpleAlert.show({
@@ -127,11 +123,11 @@ import VueTable from "./VueTable.vue";
 
             validateForm: function() {
                 this.issues.splice(0, this.issues.length);
-                this.item.account_freed.length < 4 ? this.issues.push('Conta') : null
-                this.item.platform_code.length < 1 ? this.issues.push('Plataforma') : null
-                this.item.owner_name.length  < 3 ? this.issues.push('Nome')  : null
-                this.item.robot_number.length  < 2 ? this.issues.push('Robô')  : null
-                this.item.expires_at.length < 10 ? this.issues.push('Data de Termino') : null
+                this.item.account_freed.length < 1  ? this.issues.push('Conta')      : null
+                this.item.platform_code.length < 1  ? this.issues.push('Plataforma') : null
+                this.item.owner_name.length    < 3  ? this.issues.push('Nome')       : null
+                this.item.robot_number.length  < 1  ? this.issues.push('Robô')       : null
+                this.item.expires_at.length    < 10 ? this.issues.push('Data de Termino') : null
 
                 if(this.issues.length == 0) return true
 
@@ -142,24 +138,25 @@ import VueTable from "./VueTable.vue";
             {
                 this.delItem(e);
             },
+
             handleEdit: function(e) 
             {
+                this.editCancel();
                 this.item = this.items[e];
                 this.item.owner_name = this.item.owner.owner_name || '';
                 this.item.platform_code = this.item.platform.platform_code || '';
                 this.item.editing = true;
-                this.item.curIdx = e;
+                this.item.curIdx  = e;
             },
+
             editCancel: function()
             {
-                let right = this.items.splice(this.item.curIdx, this.items.length-1);
-                
-                this.items.push(this.item);
-                right.forEach(el => {
-                    this.items.push(el);
+                let bak = this.items.splice();
+                bak.forEach(el => {
+                    this.item.push(el);
                 })
                 this.item.editing = false;
-                this.item.curIdx = -1;
+                this.item.curIdx  = -1;
             },
             delItem: function(e)
             {
@@ -188,7 +185,6 @@ import VueTable from "./VueTable.vue";
         },
         created: function(){
             this.getItems();
-            this.cleanItem = this.items;
         }
 
     }

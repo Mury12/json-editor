@@ -38,39 +38,44 @@ class OrderEntity
 
     function saveOrder()
     {
-        $this->o->key = \getUniquid(6)['res'];
-        $this->o->pass = \getUniquid(8)['res'];
-        $this->o->token = \getUniquid(32, $this->o->owner->owner_name)['res'];
 
-        $expiration_or_renew = strlen($this->o->renew_expires_at ?? 0) < 10 ? $this->o->expires_at : $this->o->renew_expires_at;
-        $_renweal = intval($this->o->renew_expires_at != null ? true : false);
+        $this->o->key   = $this->o->editing ? $this->o->key      : \getUniquid(6)['res'];
+        $this->o->pass  = $this->o->editing ? $this->o->password : \getUniquid(8)['res'];
+        $this->o->token = $this->o->editing ? $this->o->token    : \getUniquid(32, $this->o->owner->owner_name)['res'];
 
-        $query = "call sp_create_order(?,?,?,?,?,?,?,?,?,?)";
+
+
+        $_renew_expires = strlen($this->o->renew_expires_at ?? 0) < 10 ? null : $this->o->renew_expires_at;
+        $_oid = $this->o->editing ? $this->o->order_id : 0;
+        $query = "call sp_create_order(?,?,?,?,?,?,?,?,?,?,?)";
 
         $q = $this->conn->prepare($query);
         $q->bindParam(1, $this->o->owner->owner_name);
         $q->bindParam(2, $this->o->robot_number);
         $q->bindParam(3, $this->o->platform->platform_code);
         $q->bindParam(4, $this->o->account_freed);
-        $q->bindParam(5, $expiration_or_renew);
-        $q->bindParam(6, $this->o->token);
-        $q->bindParam(7, $this->o->key);
-        $q->bindParam(8, $this->o->pass);
-        $q->bindParam(9, $this->o->comment);
-        $q->bindParam(10, $_renweal);
-
-        // print_r($this->o);
-
+        $q->bindParam(5, $this->o->expires_at);
+        $q->bindParam(6, $_renew_expires);
+        $q->bindParam(7, $this->o->token);
+        $q->bindParam(8, $this->o->key);
+        $q->bindParam(9, $this->o->pass);
+        $q->bindParam(10,$this->o->comment);
+        $q->bindParam(11, $_oid);
+        
+        // print_r($_renweal);
+        // print_r($this->o->comment);
         try {
             if($q->execute()){
                 return true;
             }
-            file_put_contents('/log.txt', $q->errorInfo());
+            file_put_contents('app/partials/classes/log.txt', implode(" ",$q->errorInfo())."\n", FILE_APPEND);
         } catch (PDOException $th) {
-            throw $th;
+            file_put_contents('app/partials/classes/log.txt', $th."\n", FILE_APPEND);
         }
         return false;
     }
+
+
 
     function delItem($item_id)
     {

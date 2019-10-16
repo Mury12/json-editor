@@ -11,13 +11,15 @@
                 <th>Observações</th>
                 <th>Ação</th>
             </thead>
-            <tr v-for="(item, idx) in items" :key="idx">
+            <tr v-for="(item, idx) in items" :key="idx" 
+                :class="{'bg-black-a-0': (editing == idx)}" 
+            >
                 <td>{{item.account_freed}}</td>
                 <td>{{item.owner.owner_name != 'undefined' ? item.owner.owner_name : '' }}</td>
                 <td>{{item.robot_number}}</td>
                 <td>{{item.expires_at}}</td>
                 <td>{{item.renew_expires_at || '--'}}</td>
-                <td>{{item.observacao}}</td>
+                <td>{{item.comment}}</td>
                 <td>
                     <button class="btn btn-success" 
                         :class="{'disabled': editing == idx}"
